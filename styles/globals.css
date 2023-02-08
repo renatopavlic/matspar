@@ -9,4 +9,5 @@ body {
   background-color: #fcfcff;
   color: #1b153d;
   font-family: "Raleway", sans-serif;
+  overflow-x: hidden;
 }

@@ -1,14 +1,18 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
-import styles from "@/styles/Home.module.css";
+import { GetServerSideProps } from "next";
+
 import { SearchBar } from "@/components/SearchBar";
 import ProjectCard from "@/components/ProjectCard/ProjectCard";
 import RecentSearches from "@/components/RecentSearches/RecentSearches";
+import { getAllProducts } from "@/services/api";
+import { Product } from "@/types/Product";
 
-const inter = Inter({ subsets: ["latin"] });
+interface HomeProps {
+  products: Product[];
+}
 
-export default function Home() {
+const Home: React.FC<HomeProps> = ({ products }) => {
+  console.log("products: ", products);
   return (
     <>
       <Head>
@@ -22,15 +26,46 @@ export default function Home() {
         <main style={{ margin: "0 20px" }}>
           <RecentSearches />
           <h1>Find your favorite products now.</h1>
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
+          <div
+            style={{
+              display: "flex",
+              columnGap: "2rem",
+              rowGap: "1rem",
+              flexWrap: "wrap",
+            }}
+          >
+            {products.map((p) => (
+              <ProjectCard key={p.id} product={p} />
+            ))}
+          </div>
         </main>
       </div>
     </>
   );
-}
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const products = await getAllProducts();
+    if (Array.isArray(products) && products.length) {
+      return {
+        props: {
+          products,
+        },
+      };
+    }
+
+    return {
+      props: {
+        products: [],
+      },
+    };
+  } catch (error) {
+    return {
+      props: {
+        products: [],
+      },
+    };
+  }
+};
+export default Home;
