@@ -1,0 +1,39 @@
+.wrapper {
+  background-color: white;
+  padding: 1rem 0;
+}
+
+.headerWrapper {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(144, 149, 166, 0.65);
+  font-size: 14px;
+  font-weight: 400;
+  border-bottom: 2px solid rgba(241, 241, 241, 1);
+  letter-spacing: 0.03em;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.clearButton {
+  background-color: transparent;
+  border: none;
+  color: rgba(144, 149, 166, 0.65);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  font-family: "Raleway", sans-serif;
+}
+
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  margin: 1rem 0;
+}
+
+.deleteButton {
+  background-color: transparent;
+  border: none;
+}

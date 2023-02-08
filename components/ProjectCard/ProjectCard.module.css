@@ -1,0 +1,33 @@
+.wrapper {
+  height: 213px;
+  width: 157px;
+  padding: 0.5rem;
+  background-color: #fcfcff;
+  box-shadow: 0px 20px 35px rgba(23, 20, 57, 0.04);
+  border-radius: 14px;
+}
+
+.imageWrapper {
+  position: relative;
+  height: 100px;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.productName {
+  font-weight: 600;
+  color: #1b153d;
+  font-size: 1rem;
+  padding-bottom: 1rem;
+}
+
+.brand {
+  font-weight: 500;
+  padding-bottom: 20px;
+  color: #9095a6;
+  font-size: 12px;
+}
+
+.price {
+  color: #17a030;
+}
