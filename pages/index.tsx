@@ -1,9 +1,8 @@
-import Head from "next/head";
-import { GetServerSideProps } from "next";
-
 import { useEffect, useState } from "react";
-import { SearchBar } from "@/components/SearchBar";
-import ProjectCard from "@/components/ProjectCard/ProjectCard";
+import { GetServerSideProps } from "next";
+import Head from "next/head";
+
+import { ProjectCard, SearchBar } from "@/components";
 import { getAllProducts } from "@/services/api";
 import { Product } from "@/types/Product";
 import { getRecentSearch } from "@/services/search/api";

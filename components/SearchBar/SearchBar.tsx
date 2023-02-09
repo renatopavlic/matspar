@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 
-import styles from "./SearchBar.module.css";
-import RecentSearches from "../RecentSearches/RecentSearches";
 import { useSearchBar } from "@/hooks/useSearchBar";
+import styles from "./SearchBar.module.css";
+import { RecentSearches } from "../RecentSearches";
 
 interface SearchBarProps {
   searchSuggestion: string[];
@@ -14,7 +14,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchSuggestion }) => {
   const handleSumbit = useSearchBar();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [isVisible, setisVisible] = useState(false);
-  const isVisibleRef = useRef(false);
 
   const onSearch = (e: any) => {
     e.preventDefault();

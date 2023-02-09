@@ -1,11 +1,10 @@
 import React from "react";
 import Head from "next/head";
-import { SearchBar } from "@/components/SearchBar";
 import { GetServerSideProps } from "next";
 import { getAllProducts } from "@/services/api";
 import { Product } from "@/types/Product";
-import ProjectCard from "@/components/ProjectCard/ProjectCard";
 import { getRecentSearch } from "@/services/search/api";
+import { ProjectCard, SearchBar } from "@/components";
 
 interface ResultProps {
   result: Product[];

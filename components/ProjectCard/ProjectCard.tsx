@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
 
-import styles from "./ProjectCard.module.css";
 import { Product } from "@/types/Product";
+import styles from "./ProjectCard.module.css";
 
 interface ProjectCardProps {
   product: Product;
