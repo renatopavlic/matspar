@@ -1,1 +1,7 @@
-export const reno = 5;
+export const transformToOptions = (data: any) => {
+  if (!data) {
+    return;
+  }
+  const { suggestions } = data;
+  return suggestions.map((s: any) => s.text);
+};

@@ -1,18 +1,25 @@
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 
+import { useEffect, useState } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import ProjectCard from "@/components/ProjectCard/ProjectCard";
-import RecentSearches from "@/components/RecentSearches/RecentSearches";
 import { getAllProducts } from "@/services/api";
 import { Product } from "@/types/Product";
+import { getRecentSearch } from "@/services/search/api";
 
 interface HomeProps {
   products: Product[];
+  searchSuggestion: string[];
 }
 
-const Home: React.FC<HomeProps> = ({ products }) => {
-  console.log("products: ", products);
+const Home: React.FC<HomeProps> = ({ products, searchSuggestion }) => {
+  const [productList, setProductList] = useState<Product[]>(products);
+
+  useEffect(() => {
+    setProductList(products);
+  }, [products]);
+
   return (
     <>
       <Head>
@@ -22,19 +29,18 @@ const Home: React.FC<HomeProps> = ({ products }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <SearchBar />
+        <SearchBar searchSuggestion={searchSuggestion} />
         <main style={{ margin: "0 20px" }}>
-          <RecentSearches />
-          <h1>Find your favorite products now.</h1>
+          <h1 style={{ margin: "2rem 0" }}>Find your favorite products now.</h1>
           <div
             style={{
               display: "flex",
-              columnGap: "2rem",
+              columnGap: "1rem",
               rowGap: "1rem",
               flexWrap: "wrap",
             }}
           >
-            {products.map((p) => (
+            {productList.map((p) => (
               <ProjectCard key={p.id} product={p} />
             ))}
           </div>
@@ -47,10 +53,13 @@ const Home: React.FC<HomeProps> = ({ products }) => {
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const products = await getAllProducts();
+    console.log("products: ", products.length);
+    const searchSuggestion = await getRecentSearch("");
     if (Array.isArray(products) && products.length) {
       return {
         props: {
           products,
+          searchSuggestion,
         },
       };
     }
@@ -58,12 +67,15 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
       props: {
         products: [],
+        searchSuggestion: [],
       },
     };
   } catch (error) {
+    console.log("error: ", error);
     return {
       props: {
         products: [],
+        searchSuggestion: [],
       },
     };
   }

@@ -19,6 +19,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ product }) => {
           alt="product"
           fill
           style={{ objectFit: "contain" }}
+          sizes="(max-height: 98px)"
         />
       </div>
       <h3 className={styles.productName}>{name}</h3>
