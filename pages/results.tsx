@@ -8,20 +8,35 @@ import { ProjectCard, SearchBar } from "@/components";
 
 interface ResultProps {
   result: Product[];
-  searchSuggestion: string[];
 }
 
-const Results: React.FC<ResultProps> = ({ result, searchSuggestion }) => {
+const Results: React.FC<ResultProps> = ({ result }) => {
   return (
     <>
       <Head>
         <title>Results</title>
       </Head>
-      <SearchBar searchSuggestion={searchSuggestion} />
-      <main style={{ padding: "0 1rem" }}>
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {result.map((r) => (
-            <ProjectCard key={r.id} product={r} />
+      <SearchBar />
+      <main style={{ margin: "0 20px" }}>
+        <h1 style={{ margin: "20px 0 2rem 0" }}>
+          Find your favorite products now.
+        </h1>
+        <div style={{ display: "flex", marginBottom: 28 }}>
+          <p className="category-link active">Trandy Foods</p>
+          <p className="category-link">Bread</p>
+          <p className="category-link">Milk</p>
+          <p className="category-link">Egg</p>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            columnGap: "1rem",
+            rowGap: "1rem",
+            flexWrap: "wrap",
+          }}
+        >
+          {result.map((p) => (
+            <ProjectCard key={p.id} product={p} />
           ))}
         </div>
       </main>
