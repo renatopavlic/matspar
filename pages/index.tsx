@@ -9,10 +9,9 @@ import { getRecentSearch } from "@/services/search/api";
 
 interface HomeProps {
   products: Product[];
-  searchSuggestion: string[];
 }
 
-const Home: React.FC<HomeProps> = ({ products, searchSuggestion }) => {
+const Home: React.FC<HomeProps> = ({ products }) => {
   const [productList, setProductList] = useState<Product[]>(products);
 
   useEffect(() => {
@@ -28,9 +27,17 @@ const Home: React.FC<HomeProps> = ({ products, searchSuggestion }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <SearchBar searchSuggestion={searchSuggestion} />
+        <SearchBar />
         <main style={{ margin: "0 20px" }}>
-          <h1 style={{ margin: "2rem 0" }}>Find your favorite products now.</h1>
+          <h1 style={{ margin: "20px 0 2rem 0" }}>
+            Find your favorite products now.
+          </h1>
+          <div style={{ display: "flex", marginBottom: 28 }}>
+            <p className="category-link active">Trandy Foods</p>
+            <p className="category-link">Bread</p>
+            <p className="category-link">Milk</p>
+            <p className="category-link">Egg</p>
+          </div>
           <div
             style={{
               display: "flex",
@@ -52,13 +59,10 @@ const Home: React.FC<HomeProps> = ({ products, searchSuggestion }) => {
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const products = await getAllProducts();
-    console.log("products: ", products.length);
-    const searchSuggestion = await getRecentSearch("");
     if (Array.isArray(products) && products.length) {
       return {
         props: {
           products,
-          searchSuggestion,
         },
       };
     }
@@ -66,7 +70,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
       props: {
         products: [],
-        searchSuggestion: [],
       },
     };
   } catch (error) {
@@ -74,7 +77,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
       props: {
         products: [],
-        searchSuggestion: [],
       },
     };
   }

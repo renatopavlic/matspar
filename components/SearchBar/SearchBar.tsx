@@ -1,34 +1,81 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import { useSearchBar } from "@/hooks/useSearchBar";
 import styles from "./SearchBar.module.css";
 import { RecentSearches } from "../RecentSearches";
+import { getRecentSearch } from "@/services/search/api";
+import { initialSuggestions } from "./consts";
 
-interface SearchBarProps {
-  searchSuggestion: string[];
-}
+interface SearchBarProps {}
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchSuggestion }) => {
+const SearchBar: React.FC<SearchBarProps> = () => {
   const [searchValue, setSearchValue] = useState("");
   const handleSumbit = useSearchBar();
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [isVisible, setisVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>(initialSuggestions);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const onSearch = (e: any) => {
     e.preventDefault();
-
     handleSumbit(searchValue);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setSearchValue(value);
+
+    try {
+      // should use custom debounce function here
+      const result = await getRecentSearch(value);
+      setSuggestions(result);
+    } catch (error) {}
   };
 
+  const handleSearchInputClicked = async () => {
+    if (!isVisible) {
+      setIsVisible((prev) => !prev);
+    }
+    try {
+      const searchSuggestion = await getRecentSearch("");
+      setSuggestions(searchSuggestion);
+    } catch (error) {
+      console.log("sugesstions error: ", error);
+    }
+  };
+
+  const handleOptionDelete = (opt: string) => {
+    const filteredOptions = suggestions.filter((s) => s !== opt);
+    setSuggestions(filteredOptions);
+  };
+
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsVisible(false);
+      }
+    },
+    [wrapperRef]
+  );
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
   return (
-    <>
+    <div ref={wrapperRef}>
       <nav className={styles.wrapper}>
-        <Image alt="burger" src="/Menu.svg" height={24} width={24} />
+        {!isVisible && (
+          <Image alt="burger" src="/Menu.svg" height={24} width={24} />
+        )}
+
         <form className={styles.form} onSubmit={onSearch}>
           <Image
             alt="burger"
@@ -38,22 +85,25 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchSuggestion }) => {
             className={styles.searchIcon}
           />
           <input
-            onClick={() => setisVisible(true)}
+            onClick={handleSearchInputClicked}
             ref={searchInputRef}
             value={searchValue}
             onChange={handleChange}
             placeholder="Search Product"
             className={styles.searchInput}
+            onBlur={() => null}
           />
         </form>
       </nav>
-      {isVisible && (
+      {isVisible ? (
         <RecentSearches
-          searchSuggestion={searchSuggestion}
-          setisVisible={setisVisible}
+          searchSuggestion={suggestions}
+          setIsVisible={setIsVisible}
+          onClear={() => setSuggestions([])}
+          onDelete={handleOptionDelete}
         />
-      )}
-    </>
+      ) : null}
+    </div>
   );
 };
 
